@@ -14,10 +14,5 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode; // `children` represents any React components nested inside this provider
 }) {
-  return (
-    // SessionProvider gives access to session data (e.g., user info, token) globally
-    <SessionProvider>
-      {children} {/* Render all nested components within this provider */}
-    </SessionProvider>
-  );
+  return <SessionProvider>{children}</SessionProvider>;
 }
