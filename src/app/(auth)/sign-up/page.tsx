@@ -8,7 +8,7 @@ import { useDebounceCallback } from "usehooks-ts";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { signUpSchema } from "@/schemas/signUpSchema";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 
 import {
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ApiResponse } from "@/types/ApiResponse";
 const page = () => {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
@@ -68,11 +69,9 @@ const page = () => {
       toast(response.data.message);
       router.replace(`/verify/${username}`);
     } catch (error) {
-      console.log("Error signing up:", error);
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data.message ?? "Error signing up");
-      }
-      console.log(error);
+      const axiosError = error as AxiosError<ApiResponse<null>>;
+      toast.error(axiosError.response?.data.message ?? "Error verifying code");
+      console.log(axiosError);
     } finally {
       setIsSubmitting(false);
     }
